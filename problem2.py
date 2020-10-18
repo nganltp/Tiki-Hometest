@@ -1,7 +1,7 @@
 import json
 def sort_list(list1, list2):
     zipped_pairs = zip(list2, list1)
-    z = [x for _, x in sorted(zipped_pairs)]
+    z = [x for _, x in sorted(zipped_pairs, reverse=True)]
     return z
      
 
@@ -34,7 +34,7 @@ def write_json(asin,reviewArr):
         json.dump(data, f)
 
 reviewsList= []
-with open('ReviewsList.json') as f:
+with open('reviews_Office_Products.json') as f:
     for jsonObj in f:
         reviewDict = json.loads(jsonObj)
         reviewsList.append(reviewDict)
@@ -45,11 +45,13 @@ fields = ['asin', 'helpful', 'review_infor']
 with open('result.csv', 'a+') as csvfile:
     csvwriter = csv.writer(csvfile)
     csvwriter.writerow(fields)
-for review in reviewsList:
+for i, review in enumerate(reviewsList):
     asin_curr = review['asin']
     if (asin_curr != asin_pre):
-        sort_list(reviewArr, helpful)
-        # write_csv(asin_curr, reviewArr, helpful)
+        reviewArr = sort_list(reviewArr, helpful)
+        helpful =  sorted(helpful, reverse=True)
+        print(i, helpful)
+        write_csv(asin_curr, reviewArr, helpful)
         # write_txt(asin_curr, reviewArr, helpful)
         # write_json(asin_curr, reviewArr)
         reviewArr = []
